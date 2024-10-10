@@ -1,3 +1,25 @@
 spring:
   application:
     name: product-service
+
+  liquibase:
+    change-log: db/changelog/db-changelog-master.yml
+    url: jdbc:postgresql://localhost:5432/product-db
+    user: postgres
+    password: postgres
+    enabled: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/product-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    jpa:
+      repositories:
+        bootstrap-mode: default
+        enabled: true
+
+server:
+  port: 8081
