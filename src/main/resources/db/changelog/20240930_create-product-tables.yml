@@ -1,0 +1,124 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2024-09-30_product
+      author: Tal
+      comment: product db initialisation
+
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: summary
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: directionPrice
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency
+                  type: VARCHAR(3)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: duration
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+        - sql:
+            sql: ALTER TABLE product
+              ADD CONSTRAINT check_product_duration
+              CHECK (duration IN (1, 30, 60, 90));
+              ALTER TABLE product
+              ADD CONSTRAINT check_product_currency
+              CHECK (currency IN ('USD', 'EUR', 'RUB'));
+
+      rollback:
+        - dropTable:
+          tableName: product
+
+  - changeSet:
+      id: 2024-09-30_discount
+      author: Tal
+      comment: directionDiscount db initialisation
+
+      changes:
+        - createTable:
+            tableName: discount
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: value
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: from
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: until
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: createdAt
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updatedAt
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+
+      rollback:
+        - dropTable:
+            tableName: directionDiscount
