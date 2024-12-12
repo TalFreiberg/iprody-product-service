@@ -26,17 +26,17 @@ public class DiscountEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "discount_value", nullable = false)
-    private int discountValue;
+    @Column(name = "value", nullable = false)
+    private int value;
 
     @Column(name = "summary", nullable = false)
     private String summary;
 
     @Column(name = "from_time", nullable = false)
-    private Instant from;
+    private Instant fromTime;
 
     @Column(name = "until_time", nullable = false)
-    private Instant until;
+    private Instant untilTime;
 
     @Column(name = "active", nullable = false)
     private Boolean active;

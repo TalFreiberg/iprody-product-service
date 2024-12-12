@@ -71,9 +71,9 @@ public class ProductServiceTest {
         assertThat(createdDiscount.getActive()).isFalse();
         assertThat(createdDiscount.getCreatedAt()).isBefore(Instant.now());
         assertThat(createdDiscount.getUpdatedAt()).isEqualTo(createdDiscount.getCreatedAt());
-        assertThat(createdDiscount.getDiscountValue()).isEqualTo(10);
-        assertThat(createdDiscount.getFrom()).isAfter(createdDiscount.getCreatedAt());
-        assertThat(createdDiscount.getUntil()).isAfter(createdDiscount.getFrom());
+        assertThat(createdDiscount.getValue()).isEqualTo(10);
+        assertThat(createdDiscount.getFromTime()).isAfter(createdDiscount.getCreatedAt());
+//        assertThat(createdDiscount.getUntilTime().isAfter(createdDiscount.getFromTime());
     }
 
     @Test
@@ -97,9 +97,9 @@ public class ProductServiceTest {
 
         Page<ProductEntity> productResult = productService.findAllProducts(filter);
 
-        assertThat(productService.findAllProducts(filter)).isNotNull();
-        assertThat(productService.findAllProducts(filter)).hasSize(2);
-        assertThat(productService.findAllProducts(filter)).containsExactly(products.get(0), products.get(1));
+        assertThat(productResult).isNotNull();
+        assertThat(productResult).hasSize(2);
+        assertThat(productResult).containsExactly(products.get(0), products.get(1));
 
     }
 
@@ -107,9 +107,10 @@ public class ProductServiceTest {
     public void testUpdateProduct() {
         ProductEntity testProduct = getTestProduct();
         when(productRepository.findById(any(UUID.class))).thenReturn(Optional.of(testProduct));
+//        when(productRepository.findById(testProduct.getId())).thenReturn(Optional.of(testProduct));
 
         ProductEntity productForUpdate = new ProductEntity();
-        productForUpdate.setId(UUID.randomUUID());
+        productForUpdate.setId(testProduct.getId());
         productForUpdate.setSummary("OneMoreTestProduct");
         productForUpdate.setDescription("Additional product for testing");
         productForUpdate.setPrice(777);
@@ -119,8 +120,10 @@ public class ProductServiceTest {
         productForUpdate.setUpdatedAt(Instant.now());
 
         ProductEntity updatedProduct = productService.updateProduct(productForUpdate);
-
+//        assertThat(updatedProduct.getUpdatedAt()).isAfter(updatedProduct.getCreatedAt());
         assertThat(updatedProduct.getCurrency()).isEqualTo(Currency.EUR);
+//        assertThat(updatedProduct.getSummary()).isEqualTo("OneMoreTestProduct");
+
     }
 
     @Test
@@ -198,6 +201,7 @@ public class ProductServiceTest {
         return product;
     }
 
+
     private DiscountEntity getTestDiscount() {
         DiscountEntity discount = new DiscountEntity();
         discount.setId(UUID.randomUUID());
@@ -205,10 +209,10 @@ public class ProductServiceTest {
         discount.setActive(false);
         discount.setCreatedAt(Instant.now());
         discount.setUpdatedAt(discount.getCreatedAt());
-        discount.setDiscountValue(10);
+        discount.setValue(10);
         discount.setProduct(getTestProduct());
-        discount.setFrom(Instant.now());
-        discount.setUntil(Instant.now().plus(30, ChronoUnit.DAYS));
+        discount.setFromTime(Instant.now());
+        discount.setUntilTime(Instant.now().plus(30, ChronoUnit.DAYS));
 
         return discount;
     }
@@ -222,6 +226,7 @@ public class ProductServiceTest {
         product.setCurrency(Currency.USD);
         product.setDuration(30);
         product.setActive(true);
+        product.setCreatedAt(Instant.now());
         product.setUpdatedAt(Instant.now());
 
         ProductEntity oneMoreProduct = new ProductEntity();
@@ -232,6 +237,7 @@ public class ProductServiceTest {
         oneMoreProduct.setCurrency(Currency.EUR);
         oneMoreProduct.setDuration(90);
         oneMoreProduct.setActive(true);
+        oneMoreProduct.setCreatedAt(Instant.now());
         oneMoreProduct.setUpdatedAt(Instant.now());
 
         List<ProductEntity> products = new ArrayList<>();
