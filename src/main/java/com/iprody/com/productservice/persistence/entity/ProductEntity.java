@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,10 +24,11 @@ import java.util.UUID;
 @Entity
 @QueryEntity
 @Table(name = "product")
+@NoArgsConstructor
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "summary", nullable = false, length = 30)
@@ -35,16 +37,18 @@ public class ProductEntity {
     @Column(name = "description", nullable = false, length = 100)
     private String description;
 
-    @Column(name = "directionPrice", nullable = false)
+    @Column(name = "price", nullable = false)
     private int price;
 
     @Column(name = "currency", nullable = false)
     @Enumerated(EnumType.STRING)
     private Currency currency;
 
-    //A duration defines how long of a specific product
-    // will keep going for a customer, in days.
-    // So far, there few types exist: 1-day, 30-days, 60-days, 90-days
+    /**
+     *   A duration defines how long of a specific product
+     *   will keep going for a customer, in days.
+     *   So far, there few types exist: 1-day, 30-days, 60-days, 90-days
+     */
     @Column(name = "duration", nullable = false)
     private int duration;
 

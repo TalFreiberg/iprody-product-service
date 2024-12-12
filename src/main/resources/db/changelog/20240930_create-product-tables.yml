@@ -10,8 +10,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGINT
-                  autoIncrement: true
+                  type: UUID
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -26,7 +25,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: directionPrice
+                  name: price
                   type: SMALLINT
                   constraints:
                     nullable: false
@@ -47,12 +46,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: created_at
-                  type: TIMESTAMPTZ
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
                   name: updated_at
-                  type: TIMESTAMPTZ
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
         - sql:
@@ -78,8 +77,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: BIGINT
-                  autoIncrement: true
+                  type: UUID
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -94,13 +92,13 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: from
-                  type: TIMESTAMPTZ
+                  name: from_time
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
-                  name: until
-                  type: TIMESTAMPTZ
+                  name: until_time
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
@@ -109,16 +107,26 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: createdAt
-                  type: TIMESTAMPTZ
+                  name: created_at
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
-                  name: updatedAt
-                  type: TIMESTAMPTZ
+                  name: updated_at
+                  type: TIMESTAMP
                   constraints:
                     nullable: false
-
+              - column:
+                  name: product_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: discount
+            baseColumnNames: product_id
+            referencedTableName: product
+            referencedColumnNames: id
+            constraintName: fk_product_discount
       rollback:
         - dropTable:
-            tableName: directionDiscount
+            tableName: discount

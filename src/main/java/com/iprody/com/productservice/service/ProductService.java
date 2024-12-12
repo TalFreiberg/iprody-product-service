@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,8 +31,8 @@ public class ProductService {
         return productRepository.save(productEntity);
     }
 
-    public DiscountEntity createDiscount(DiscountEntity discountEntity) {
-        return discountRepository.save(discountEntity);
+    public void createDiscount(DiscountEntity discountEntity) {
+        discountRepository.save(discountEntity);
     }
 
     private DiscountEntity getDiscountByIdOrElseThrow(UUID id) {
@@ -49,6 +48,8 @@ public class ProductService {
         return getByIdOrElseThrow(id);
     }
 
+    public DiscountEntity getDiscountById(UUID id) {return getDiscountByIdOrElseThrow(id);}
+
     public Page<ProductEntity> findAllProducts(ProductFilter filter) {
         return productRepository.findAll(filter.createPredicate(), filter.createPageable());
     }
@@ -57,10 +58,11 @@ public class ProductService {
     public ProductEntity updateProduct(ProductEntity product) {
         ProductEntity existingProduct = getByIdOrElseThrow(product.getId());
         existingProduct.setPrice(product.getPrice());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setDuration(product.getDuration());
         existingProduct.setCurrency(product.getCurrency());
         existingProduct.setDiscounts(product.getDiscounts());
         existingProduct.setActive(product.isActive());
-        existingProduct.setUpdatedAt(Instant.now());
         return existingProduct;
     }
 
@@ -81,24 +83,27 @@ public class ProductService {
 
     @Transactional
     public DiscountEntity changeDiscountStatus(UUID discountID, Boolean discountStatus) {
-        DiscountEntity discount = discountRepository.findById(discountID).orElseThrow(EntityNotFoundException::new);
+        DiscountEntity discount = getDiscountByIdOrElseThrow(discountID);
         discount.setActive(discountStatus);
         return discount;
     }
 
     @Transactional
     public ProductEntity changeProductStatus(UUID id, Boolean active) {
-        ProductEntity product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        ProductEntity product = getByIdOrElseThrow(id);
         product.setActive(active);
         return product;
     }
 
     @Transactional
-    public ProductEntity changeProductPriceAndCurrency(UUID id, int price, Currency currency) {
+    public ProductEntity changeProductPriceAndCurrency(UUID id, Integer price, Currency currency) {
         ProductEntity product = productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        product.setPrice(price);
-        product.setCurrency(currency);
-        product.setUpdatedAt(Instant.now());
+        if(null != price) {
+            product.setPrice(price);
+        }
+        if (null != currency) {
+            product.setCurrency(currency);
+        }
         return product;
     }
 
